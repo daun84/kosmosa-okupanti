@@ -1,5 +1,5 @@
+import curses
 import model
-import view
 from view import View
 from threading import Thread
 from time import sleep
@@ -12,13 +12,13 @@ class Control(Thread):
         global user_turn
         global game_is_running
         while game_is_running:
-            key = view.stdscr.getch()
+            key = View.stdscr.getch()
             if key == 4: 
                 game_is_running = False
                 break
-            elif key == view.curses.KEY_LEFT:
+            elif key == curses.KEY_LEFT:
                 user_turn = model.EnumPlayerTurns.LEFT
-            elif key == view.curses.KEY_RIGHT:
+            elif key == curses.KEY_RIGHT:
                 user_turn = model.EnumPlayerTurns.RIGHT
             elif key == ord(' '):
                 user_turn = model.EnumPlayerTurns.FIRE  

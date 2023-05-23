@@ -2,16 +2,17 @@ import curses
 from model import Object
 from typing import List
 
-stdscr = curses.initscr()
+#stdscr = curses.initscr()
 
 class View:
+    stdscr = curses.initscr()
     game_window = None
     bar_window = None
 
     @classmethod
     def is_window_big_enough(cls, rows, cols):
         try:
-            terminal_rows, terminal_cols = stdscr.getmaxyx()
+            terminal_rows, terminal_cols = cls.stdscr.getmaxyx()
             if terminal_rows >= rows and terminal_cols >= cols:
                 return True
             else:
@@ -21,13 +22,13 @@ class View:
 
     @classmethod
     def start_session(cls, rows, cols):
-        stdscr.clear()
+        cls.stdscr.clear()
         curses.cbreak()
-        stdscr.keypad(True)
+        cls.stdscr.keypad(True)
         curses.noecho()
         curses.curs_set(0)
         curses.start_color()
-        terminal_height, terminal_width = stdscr.getmaxyx()
+        terminal_height, terminal_width = cls.stdscr.getmaxyx()
 
         cls.print_centered("WARNING: PHOTOSENSITIVITY/EPILEPSY SEIZURES")
 
@@ -66,17 +67,17 @@ class View:
 
     @classmethod
     def print_centered(cls, text):
-        stdscr.clear()
-        rows, columns = stdscr.getmaxyx()
+        cls.stdscr.clear()
+        rows, columns = cls.stdscr.getmaxyx()
         x = columns // 2 - len(text) // 2
         y = rows // 2
-        stdscr.addstr(y, x, text, curses.A_BOLD)
-        stdscr.refresh()
-        stdscr.getch()
+        cls.stdscr.addstr(y, x, text, curses.A_BOLD)
+        cls.stdscr.refresh()
+        cls.stdscr.getch()
 
     @classmethod
     def end_session(cls):
         curses.nocbreak()
-        stdscr.keypad(False)
+        cls.stdscr.keypad(False)
         curses.echo()
         curses.endwin()
