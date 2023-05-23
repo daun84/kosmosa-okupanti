@@ -1,7 +1,6 @@
 from abc import ABC, abstractmethod
 from enum import Enum
 from typing import List
-import pickle
 
 class EnumPlayerTurns(Enum):
     NONE = 0
@@ -103,11 +102,19 @@ class Game:
 
     @classmethod
     def get_starting_position(cls):
+        # player
         cls.create_object(cls.map_height, cls.map_width // 2 - 1, "/^\\", 2, EnumTeam.PLAYER, Player)
         cls.player = cls.objects[0]
-        with open('starting_pos.pickle', 'rb') as file:
-            stored_objects = pickle.load(file)
-        cls.objects.extend(stored_objects)
+        # aliens
+        for i in range(5):
+            for j in range(7):
+                cls.objects.append(Alien(i * 2, j * 4, '\O/', 3))
+        # walls
+        for i in range(4):
+            for j in range(7):
+                for k in range(3):
+                    cls.objects.append(Wall(Game.map_height - 5 + i, 2 + j * 7 + k, '#', 1, EnumTeam.NONE))
+        # moves for aliens
         with open('alien_moves.txt', 'r') as file:
             for line in file:
                 values = line.strip().split()
